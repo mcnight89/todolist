@@ -18,6 +18,8 @@ services:
   api:
     image: ptokarev/todo:latest
     env_file: .env
+    environment:
+      POSTGRES_HOST: db
     depends_on:
       db:
         condition: service_healthy
