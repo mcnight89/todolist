@@ -23,3 +23,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email')
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = PasswordField(required=True)
+
+
+class UpdatePasswordSerializer(serializers.Serializer):
+    old_password = PasswordField(required=True)
+    new_password = PasswordField(required=True)
