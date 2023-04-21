@@ -29,7 +29,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./core:/opt/core
+      - ./core:/opt/core/
       - ./ToDo:/opt/ToDo/
 
 
