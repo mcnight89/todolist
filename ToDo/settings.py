@@ -24,8 +24,12 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'social_django',
+    'django_extensions',
+    'django_filters',
     # First party apps
     'core',
+    'goals',
+
 
 ]
 
@@ -127,3 +131,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION-CLASS': 'rest_framework.pagination.LimitOffsetPagination'
+}
