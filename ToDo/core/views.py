@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import User
-from core.serializers import CreateUserSerializer, ProfileSerializer, LoginSerializer, UpdatePasswordSerializer
+from ToDo.core.models import User
+from ToDo.core.serializers import CreateUserSerializer, ProfileSerializer, LoginSerializer, UpdatePasswordSerializer
 
 
 class SignUpView(GenericAPIView):

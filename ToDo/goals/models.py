@@ -3,7 +3,7 @@ from unicodedata import category
 
 from django.db import models
 
-from core.models import User
+from ToDo.core.models import User
 
 
 class BaseModel(models.Model):

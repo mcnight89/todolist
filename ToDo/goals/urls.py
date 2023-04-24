@@ -1,6 +1,6 @@
 from django.urls import path
 
-from goals import views
+from ToDo.goals import views
 
 
 urlpatterns = [

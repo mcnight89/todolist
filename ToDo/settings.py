@@ -27,8 +27,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     # First party apps
-    'core',
-    'goals',
+    'ToDo.core',
+    'ToDo.goals',
 
 
 ]

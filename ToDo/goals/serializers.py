@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, PermissionDenied
-from core.serializers import ProfileSerializer
-from goals.models import GoalCategory, Goal, GoalComment
+from ToDo.core.serializers import ProfileSerializer
+from ToDo.goals.models import GoalCategory, Goal, GoalComment
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):

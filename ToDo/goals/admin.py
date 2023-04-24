@@ -1,5 +1,5 @@
 from django.contrib import admin
-from goals.models import GoalCategory, Goal
+from ToDo.goals.models import GoalCategory, Goal
 
 
 @admin.register(GoalCategory)

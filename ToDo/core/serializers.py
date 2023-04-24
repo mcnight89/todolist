@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from ToDo.fields import PasswordField
-from core.models import User
+from ToDo.core.models import User
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
