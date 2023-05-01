@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     # First party apps
     'ToDo.core',
     'ToDo.goals',
+    'ToDo.bot',
 
 
 ]
@@ -135,3 +136,5 @@ AUTHENTICATION_BACKENDS = (
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION-CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
+
+BOT_TOKEN = env.str('BOT_TOKEN')
