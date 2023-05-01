@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ToDo.goals.models import GoalCategory, Goal
+from ToDo.goals.models import GoalCategory, Goal, Board
 
 
 @admin.register(GoalCategory)
@@ -14,3 +14,10 @@ class GoalAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'created', 'updated')
     search_fields = ('title', 'description')
     list_filter = ('status', 'priority')
+
+
+@admin.register(Board)
+class GoalCategoryAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    search_fields = ('title',)
+    list_filter = ('is_deleted',)

@@ -1,9 +1,56 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from ToDo.core.serializers import ProfileSerializer
-from ToDo.goals.models import GoalCategory, Goal, GoalComment
+from ToDo.goals.models import GoalCategory, Goal, GoalComment, Board, BoardParticipant
+from ToDo.core.models import User
+from django.db import transaction
+from rest_framework.request import Request
 
 
+class BoardCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = '__all__'
+        read_only_fields = ('id', 'created', 'updated', 'is_deleted')
+
+
+class BoardParticipantsSerializer(serializers.ModelSerializer):
+    role = serializers.ChoiceField(required=True, choices=BoardParticipant.editable_roles)
+    user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+
+    def validate_user(self, user: User) -> User:
+        if self.context['request'].user == user:
+            raise ValidationError('Failed to change your role')
+        return user
+
+    class Meta:
+        model = BoardParticipant
+        fields = '__all__'
+        read_only_fields = ('id', 'created', 'updated', 'board')
+
+
+class BoardWithParticipantsSerializer(BoardCreateSerializer):
+    participants = BoardParticipantsSerializer(many=True)
+
+    def update(self, instance: Board, validated_data: dict) -> Board:
+        request: Request = self.context['request']
+        with transaction.atomic():
+            BoardParticipant.objects.filter(board=instance).exclude(user=request.user).delete()
+            BoardParticipant.objects.bulk_create(
+                [
+                    BoardParticipant(user=participant['user'], role=participant['role'], board=instance)
+                    for participant in validated_data.get('participants', [])
+                ], ignore_conflicts=True
+            )
+
+            if title := validated_data.get('title'):
+                instance.title = title
+            instance.save()
+
+        return instance
+
+
+# ==========================================================================
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -11,6 +58,17 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
         model = GoalCategory
         read_only_fields = ('id', 'created', 'updated', 'user', 'is_deleted')
         fields = '__all__'
+
+    def validate_board(self, board: Board) -> Board:
+        if board.is_deleted:
+            raise ValidationError('Deleted board')
+        if not BoardParticipant.objects.filter(
+                board_id=board.id,
+                user_id=self.context['request'].user.id,
+                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer]
+        ).exists():
+            raise PermissionDenied
+        return board
 
 
 class GoalCategorySerializer(serializers.ModelSerializer):
@@ -21,6 +79,8 @@ class GoalCategorySerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created', 'updated', 'user', 'is_deleted')
         fields = '__all__'
 
+
+# ==========================================================================
 
 class GoalCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -56,6 +116,7 @@ class GoalSerializer(serializers.ModelSerializer):
         return value
 
 
+# ==========================================================================
 class GoalCommentCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
