@@ -1,8 +1,12 @@
+import logging
+
 from django.conf import settings
 from pydantic.error_wrappers import ValidationError
 
 from ToDo.bot.tg.schemas import GetUpdatesResponse, SendMessageResponse
 import requests
+
+logger = logging.getLogger(__name__)
 
 class TgClient:
     def __init__(self, token: str = settings.BOT_TOKEN):
@@ -15,9 +19,8 @@ class TgClient:
         data = self._get(method='getUpdates', offset=offset, timeout=timeout)
         try:
             return GetUpdatesResponse(**data)
-        except ValidationError as e:
-            print(e)
-            print(data)
+        except ValidationError:
+            logger.warning(data)
             return GetUpdatesResponse(ok=False, result=[])
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
@@ -28,7 +31,7 @@ class TgClient:
         url: str = self.get_url(method)
         response = requests.get(url, params=params)
         if not response.ok:
-            print(f'Status code: {response.status_code}\nBody: {response.content}')
+            logger.error('Status code: %s. Body: %s', response.status_code, response.content)
             raise RuntimeError
 
         return response.json()
