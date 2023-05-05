@@ -45,5 +45,8 @@ typing_extensions==4.5.0
 urllib3==1.26.15
 uuid==1.30
 zope.interface==6.0
-
+pytest==7.3.1
+factory-boy==3.2.1
+pytest-django==4.5.2
+pytest-factoryboy==2.5.1
 
