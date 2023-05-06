@@ -8,6 +8,7 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+
 class TgClient:
     def __init__(self, token: str = settings.BOT_TOKEN):
         self.token = token

@@ -10,7 +10,7 @@ class BoardPermissions(IsAuthenticated):
     def has_object_permission(self, request: Request, view, obj: Board) -> bool:
         _filters: dict[str, Any] = {'user': request.user.id, 'board_id': obj.id}
         if request.method not in SAFE_METHODS:
-            _filters['role__in'] = BoardParticipant.Role.owner
+            _filters['role__in'] = [BoardParticipant.Role.owner]
 
         return BoardParticipant.objects.filter(**_filters).exists()
 

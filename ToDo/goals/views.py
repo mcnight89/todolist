@@ -1,8 +1,9 @@
 from rest_framework import generics, permissions, filters
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
-import django.db as transaction
+from django.db import transaction
 from django.db.models import QuerySet
+from rest_framework.pagination import LimitOffsetPagination
 
 from ToDo.goals.filters import GoalDateFilter
 from ToDo.goals.models import GoalCategory, Goal, GoalComment, BoardParticipant, Board
